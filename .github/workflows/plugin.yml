@@ -1,0 +1,94 @@
+name: Plugin
+
+# Compila o Situa (AAX sem assinatura, VST3 e AU) para Mac (Apple + Intel) e Windows, e testa:
+# volume e banda de alguns presets, o atraso do codec, a independência do tamanho do bloco e o pluginval.
+# A assinatura PACE do AAX é feita depois, fora daqui (scripts/empacotar-mac.sh).
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
+
+env:
+  PLUGINVAL_VERSAO: "v1.0.4"
+
+jobs:
+  mac:
+    name: macOS (Apple + Intel)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: JUCE 8.0.9
+        run: git clone --depth 1 --branch 8.0.9 https://github.com/juce-framework/JUCE.git "$RUNNER_TEMP/JUCE"
+      - name: Configurar
+        run: cmake -B build -S juce -DCMAKE_BUILD_TYPE=Release -DSITUA_UNIVERSAL=ON -DJUCE_DIR="$RUNNER_TEMP/JUCE"
+      - name: Compilar
+        run: cmake --build build --target Situa_VST3 Situa_AU Situa_AAX testa-situa -j 4
+      - name: Conferir arquiteturas (Apple + Intel)
+        run: |
+          for f in VST3/Situa.vst3/Contents/MacOS/Situa AU/Situa.component/Contents/MacOS/Situa AAX/Situa.aaxplugin/Contents/MacOS/Situa; do
+            lipo -info "build/Situa_artefacts/Release/$f"
+            lipo -info "build/Situa_artefacts/Release/$f" | grep -q "x86_64 arm64\|arm64 x86_64"
+          done
+      - name: Testes do som
+        run: python3 scripts/testar.py build/testa-situa_artefacts/Release/testa-situa
+      - name: Instalar no usuário (para o pluginval e o auval)
+        run: |
+          mkdir -p ~/Library/Audio/Plug-Ins/VST3 ~/Library/Audio/Plug-Ins/Components
+          ditto build/Situa_artefacts/Release/VST3/Situa.vst3 ~/Library/Audio/Plug-Ins/VST3/Situa.vst3
+          ditto build/Situa_artefacts/Release/AU/Situa.component ~/Library/Audio/Plug-Ins/Components/Situa.component
+          killall -9 AudioComponentRegistrar || true
+      - name: pluginval e auval
+        run: |
+          curl -sL -o pv.zip "https://github.com/Tracktion/pluginval/releases/download/$PLUGINVAL_VERSAO/pluginval_macOS.zip"
+          unzip -q pv.zip
+          ./pluginval.app/Contents/MacOS/pluginval --strictness-level 7 --validate-in-process --skip-gui-tests --timeout-ms 600000 --validate ~/Library/Audio/Plug-Ins/VST3/Situa.vst3
+          ./pluginval.app/Contents/MacOS/pluginval --strictness-level 7 --validate-in-process --skip-gui-tests --timeout-ms 600000 --validate ~/Library/Audio/Plug-Ins/Components/Situa.component
+          auval -v aufx Situ DnLm | tail -3
+      - name: Empacotar
+        run: |
+          mkdir -p pacote
+          ditto build/Situa_artefacts/Release/VST3/Situa.vst3 pacote/Situa.vst3
+          ditto build/Situa_artefacts/Release/AU/Situa.component pacote/Situa.component
+          ditto build/Situa_artefacts/Release/AAX/Situa.aaxplugin "pacote/Situa.aaxplugin (sem assinatura)"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Situa-mac
+          path: pacote
+
+  windows:
+    name: Windows
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - name: JUCE 8.0.9
+        run: git clone --depth 1 --branch 8.0.9 https://github.com/juce-framework/JUCE.git "$RUNNER_TEMP/JUCE"
+      - name: WebView2 (janela em HTML)
+        shell: pwsh
+        run: |
+          Register-PackageSource -ProviderName NuGet -Name nugetRepository -Location https://www.nuget.org/api/v2 -Force | Out-Null
+          Install-Package Microsoft.Web.WebView2 -Scope CurrentUser -RequiredVersion 1.0.1901.177 -Source nugetRepository -Force | Out-Null
+      - name: Configurar
+        run: cmake -B build -S juce -A x64 -DJUCE_DIR="$RUNNER_TEMP/JUCE"
+      - name: Compilar
+        run: cmake --build build --config Release --target Situa_VST3 Situa_AAX testa-situa -- -m
+      - name: Testes do som
+        run: python scripts/testar.py build/testa-situa_artefacts/Release/testa-situa.exe
+      - name: pluginval
+        run: |
+          curl -sL -o pv.zip "https://github.com/Tracktion/pluginval/releases/download/$PLUGINVAL_VERSAO/pluginval_Windows.zip"
+          unzip -q pv.zip
+          ./pluginval.exe --strictness-level 7 --validate-in-process --skip-gui-tests --timeout-ms 600000 --validate build/Situa_artefacts/Release/VST3/Situa.vst3
+      - name: Empacotar
+        run: |
+          mkdir -p pacote
+          cp -R build/Situa_artefacts/Release/VST3/Situa.vst3 pacote/
+          cp -R build/Situa_artefacts/Release/AAX/Situa.aaxplugin "pacote/Situa.aaxplugin (sem assinatura)"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Situa-windows
+          path: pacote

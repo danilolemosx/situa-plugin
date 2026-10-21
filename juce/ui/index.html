@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Situa</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="topo">
+  <div class="marca">SITUA<span>.</span></div>
+  <span id="selo" class="selo">INIT</span>
+  <span class="espaco"></span>
+  <span class="rot">CHAIN</span>
+  <div class="grupo" id="cadeia">
+    <button class="tecla" data-m="device">DEVICE</button>
+    <button class="tecla" data-m="space">SPACE</button>
+    <button class="tecla" data-m="barrier">BARRIER</button>
+  </div>
+</header>
+
+<main class="grade">
+  <section class="painel">
+    <div class="tit"><h3>PRESETS</h3></div>
+    <input class="busca" id="busca" type="search" placeholder="Search…" spellcheck="false">
+    <div class="lista" id="lista"></div>
+  </section>
+
+  <div class="coluna">
+    <div class="linha" style="grid-template-columns: minmax(0,1fr) minmax(0,1fr); flex: 1;">
+      <section class="painel">
+        <div class="tit"><h3>FREQUENCY</h3><span class="rot" id="banda">—</span></div>
+        <div class="grafico"><svg id="curva" viewBox="0 0 300 150" preserveAspectRatio="none"></svg><span class="eixo" style="left:33.3%">100</span><span class="eixo" style="left:66.6%">1k</span><span class="eixo" style="left:96%">10k</span><span class="eixo db" style="top:22%">0 dB</span><span class="eixo db" style="top:72%">−24</span></div>
+      </section>
+      <section class="painel">
+        <div class="tit"><h3>SCENE</h3><span class="rot" id="lugar">—</span></div>
+        <div class="grafico"><svg id="cena" viewBox="0 0 300 150"></svg></div>
+        <div class="leituras">
+          <div><span class="rot">DIRECT / REVERB</span><b class="tab" id="nDr">—</b></div>
+          <div><span class="rot">RT60</span><b class="tab" id="nRt">—</b></div>
+          <div><span class="rot">PRE-DELAY</span><b class="tab" id="nPd">—</b></div>
+          <div><span class="rot">LEVEL</span><b class="tab" id="nNivel">—</b></div>
+        </div>
+      </section>
+    </div>
+    <div class="linha" style="grid-template-columns: minmax(0,1.3fr) minmax(0,1.3fr) minmax(0,.9fr) minmax(0,.9fr);">
+      <section class="painel">
+        <div class="tit"><h3>DEVICE</h3><button class="chip" id="codec">CODEC</button></div>
+        <div class="knobs">
+          <div class="knob" data-param="lowCut" data-cor="#efe5cf"><svg></svg><span class="v tab"></span><span class="n">LOW CUT</span></div>
+          <div class="knob" data-param="highCut" data-cor="#efe5cf"><svg></svg><span class="v tab"></span><span class="n">HIGH CUT</span></div>
+          <div class="knob" data-param="drive" data-cor="#d2382f"><svg></svg><span class="v tab"></span><span class="n">DRIVE</span></div>
+        </div>
+      </section>
+      <section class="painel">
+        <div class="tit"><h3>SPACE</h3><button class="chip" id="airPlus">AIR+</button></div>
+        <div class="knobs">
+          <div class="knob" data-param="size" data-cor="#8fd9a8"><svg></svg><span class="v tab"></span><span class="n">SIZE</span></div>
+          <div class="knob" data-param="decay" data-cor="#8fd9a8"><svg></svg><span class="v tab"></span><span class="n">DECAY</span></div>
+          <div class="knob" data-param="distance" data-cor="#d2382f"><svg></svg><span class="v tab"></span><span class="n">DISTANCE</span></div>
+        </div>
+      </section>
+      <section class="painel">
+        <div class="tit"><h3>BARRIER</h3></div>
+        <div class="knobs">
+          <div class="knob" data-param="muffle" data-cor="#c9902e"><svg></svg><span class="v tab"></span><span class="n">MUFFLE</span></div>
+          <div class="knob" data-param="leak" data-cor="#c9902e"><svg></svg><span class="v tab"></span><span class="n">LEAK</span></div>
+        </div>
+      </section>
+      <section class="painel">
+        <div class="tit"><h3>OUT</h3></div>
+        <div class="knobs">
+          <div class="knob" data-param="mix" data-cor="#efe5cf"><svg></svg><span class="v tab"></span><span class="n">MIX</span></div>
+          <div class="knob" data-param="output" data-cor="#efe5cf"><svg></svg><span class="v tab"></span><span class="n">OUTPUT</span></div>
+        </div>
+      </section>
+    </div>
+  </div>
+</main>
+
+<footer class="pe">
+  <button class="tecla" id="mono">MONO</button>
+  <span class="espaco"></span>
+  <button class="tecla" id="bypass">BYPASS</button>
+</footer>
+<div class="rodape"><span id="status"></span><span>v0.1</span></div>
+
+  <script>
+    // relata erros e o carregamento ao plugin (conferência dos testes, SITUA_TESTE_JANELA)
+    window.__situaErros = [];
+    window.addEventListener("error", (e) => window.__situaErros.push(String(e.message) + " @" + e.lineno));
+    window.addEventListener("unhandledrejection", (e) => window.__situaErros.push("promessa: " + String(e.reason)));
+  </script>
+  <script src="juce.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
