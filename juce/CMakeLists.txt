@@ -111,11 +111,13 @@ target_sources(testa-situa PRIVATE teste/Main.cpp Source/PluginProcessor.cpp ${S
 target_compile_definitions(testa-situa PRIVATE
 	SITUA_SEM_JANELA=1
 	JUCE_PLUGINHOST_VST3=1
-	JUCE_PLUGINHOST_AU=1
 	JUCE_MODAL_LOOPS_PERMITTED=1
 	JUCE_WEB_BROWSER=0
 	JUCE_USE_CURL=0)
 target_compile_definitions(testa-situa PRIVATE SITUA_COM_OPUS=1)
+if(APPLE)
+	target_compile_definitions(testa-situa PRIVATE JUCE_PLUGINHOST_AU=1)   # o AU só existe no Mac
+endif()
 target_link_libraries(testa-situa PRIVATE
 	opus
 	juce::juce_audio_processors
