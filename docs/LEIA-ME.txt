@@ -1,0 +1,90 @@
+SITUA 0.1.0 — coloca o diálogo num lugar, como plugin
+=====================================================
+
+O QUE É
+O Situa faz a voz soar como se viesse de outro lugar: telefone, rádio, sala grande, igreja,
+longe na rua, através da parede. Tem 26 presets prontos e todos os botões para ajustar.
+Avid Media Composer e Pro Tools (AAX, ao vivo e AudioSuite), Premiere e DaVinci Resolve (VST3),
+Logic (AU). Mac e Windows.
+Roda no computador, sem internet.
+
+
+COMO USAR
+Media Composer ou Pro Tools, no clip (AudioSuite):
+1. Selecione o clip ou o trecho na timeline.
+2. Abra o AudioSuite e escolha Situa.
+3. Escolha um preset à esquerda (dá para buscar pelo nome), ajuste e ouça no Preview.
+4. Clique em Render.
+
+Ao vivo (Media Composer, Pro Tools, Premiere, Resolve, Logic):
+1. Ponha o Situa num insert da faixa de diálogo.
+2. Escolha um preset e ajuste enquanto toca.
+
+OS PRESETS
+- Salas: Small Room, Living Room, Large Hall, Church, Bathroom, Stairwell, Car Interior, Warehouse
+- Distância: Across the Room, Shouting Distance
+- Aparelhos: Landline Phone, Cell Phone, Video Call, Speakerphone, Walkie-Talkie, AM Radio,
+  TV in Next Room, PA Speaker, Megaphone
+- Barreiras: Through Wall, Through Door, Next Apartment, Underwater
+
+OS BOTÕES
+A cadeia é DEVICE → SPACE → BARRIER → OUT. Cada bloco liga e desliga no alto da janela.
+- DEVICE (o aparelho): LOW CUT, HIGH CUT e DRIVE (saturação). Em CODEC, a compressão
+  da linha: LANDLINE (telefone fixo), 2G, 3G, HD ou VOIP (chamada pela internet,
+  com falhas de pacote).
+- SPACE (a sala): SIZE (tamanho), DECAY (quanto o reverb dura) e DISTANCE (longe ou perto).
+  AIR+ aumenta a perda de agudos com a distância: a voz chega mais abafada de longe.
+- BARRIER (a parede): MUFFLE (o quanto abafa) e LEAK (o quanto vaza pela fresta).
+- OUT: MIX (original e efeito) e OUTPUT (volume).
+- MONO junta tudo em um canal; BYPASS toca o original.
+
+BOM SABER
+- A sala não muda o volume da voz; só a distância abaixa (até −8 dB).
+- O Situa não atrasa o som, a não ser nos codecs 2G, 3G, HD e VOIP (26 ms).
+  Nesses casos ele avisa o programa, que compensa sozinho.
+- Os codecs de celular só funcionam a 48 kHz. Em outras taxas, eles viram o telefone fixo.
+
+
+QUAL ARQUIVO BAIXAR
+- Mac (chip Apple ou Intel, macOS 11 ou mais novo): Situa-0.1.0-mac.pkg
+  Instala AAX, VST3 e AU de uma vez.
+- Windows 10/11:                                    Situa-0.1.0-windows-vst3.zip
+  Só VST3 (Premiere, Resolve). O AAX de Windows ainda não existe.
+
+
+INSTALAR NO MAC
+1. Feche o Media Composer, o Pro Tools e os outros programas de edição.
+2. Abra o Situa-0.1.0-mac.pkg e siga o instalador. Ele pede a senha do Mac.
+3. Abra o programa de edição de novo. O Situa aparece na lista de plugins.
+
+O instalador não é assinado pela Apple, então o Mac reclama na primeira vez. É normal:
+
+> "O Situa-0.1.0-mac.pkg não pode ser aberto" / "A Apple não pôde verificar…"
+  1. Tente abrir o .pkg uma vez e clique em OK.
+  2. Vá em Ajustes do Sistema > Privacidade e Segurança.
+  3. No fim da página, clique em "Abrir Mesmo Assim" e confirme com a senha.
+
+> O Situa não aparece no Logic
+  Em Logic Pro > Configurações > Plug-in Manager, clique em "Reset & Rescan Selection".
+
+O AAX vai assinado pela PACE, como a Avid exige.
+
+
+INSTALAR NO WINDOWS
+1. Descompacte o Situa-0.1.0-windows-vst3.zip.
+2. Copie a pasta Situa.vst3 para C:\Program Files\Common Files\VST3\
+3. Abra o Premiere ou o Resolve de novo.
+
+> O navegador bloqueia o download
+  Nos downloads, clique nos três pontinhos ao lado do arquivo e escolha "Manter".
+
+
+BAIXANDO DO GOOGLE DRIVE
+"O Google Drive não pode verificar este arquivo quanto a vírus": é só pelo tamanho.
+Clique em "Fazer o download assim mesmo".
+
+
+SE DER PROBLEMA
+- O plugin não aparece no Avid: confira se o Media Composer estava fechado durante a
+  instalação e abra-o de novo.
+- Mande um print da tela e o nome do programa para o Danilo.
