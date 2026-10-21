@@ -236,7 +236,7 @@ const knobs = [...document.querySelectorAll(".knob")];
 for (const el of knobs) {
   const nome = el.dataset.param, p = PARAMS[nome], svg = el.querySelector("svg");
   svg.setAttribute("viewBox", "0 0 100 100");
-  svg.setAttribute("width", 46); svg.setAttribute("height", 46);
+  svg.setAttribute("width", 42); svg.setAttribute("height", 42);
   svg.addEventListener("pointerdown", (ev) => {
     if (p.m && !ligado(p.m)) chaves[p.m].setValue(true);   // mexer no knob liga a etapa
     if (ev.altKey) { definir(nome, p.padrao); return; }
