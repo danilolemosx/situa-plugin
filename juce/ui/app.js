@@ -420,8 +420,15 @@ function atualizar() {
 }
 
 // redesenha uma vez por quadro quando qualquer parâmetro muda
+// (com um temporizador de reserva: com a janela escondida ou a tela apagada o navegador pausa os quadros)
 let pedido = false;
-const agendar = () => { if (!pedido) { pedido = true; requestAnimationFrame(() => { pedido = false; atualizar(); }); } };
+const agendar = () => {
+  if (pedido) return;
+  pedido = true;
+  const fazer = () => { if (pedido) { pedido = false; atualizar(); } };
+  requestAnimationFrame(fazer);
+  setTimeout(fazer, 60);
+};
 for (const s of Object.values(sliders)) s.valueChangedEvent.addListener(agendar);
 for (const c of Object.values(chaves)) c.valueChangedEvent.addListener(agendar);
 for (const c of Object.values(combos)) c.valueChangedEvent.addListener(agendar);
@@ -433,6 +440,7 @@ if (nativo("testePreset")) nativo("testePreset")().then((nome) => { if (nome) se
 setTimeout(() => {
   const f = nativo("janelaPronta");
   if (!f) return;
+  atualizar();
   const resumo = {
     juce: !!juce,
     erros: window.__situaErros,
